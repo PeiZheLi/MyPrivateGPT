@@ -1,6 +1,6 @@
 # PrivateGPT
 
-这个项目主要基于Gradio进行开发，参考借鉴了[gpt_academic](https://github.com/binary-husky/gpt_academic)项目，完成了一个及其轻量化的私人Chat助手。
+这个项目主要基于Gradio进行开发，参考借鉴了[gpt_academic](https://github.com/binary-husky/gpt_academic)项目，完成了一个极其轻量化的私人Chat助手。
 大模型的调用主要基于api的方式调用，同时支持调用本地的ollam模型。
 目前的多模态功能仅支持图片的调用。
 本项目结构清晰，逻辑明确，方便自定义，拒绝屎山！！！

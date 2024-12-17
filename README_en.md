@@ -2,7 +2,8 @@
 
 This project is primarily developed based on Gradio, drawing inspiration from the [gpt_academic](https://github.com/binary-husky/gpt_academic) project, to create an extremely lightweight private Chat assistant. 
 The invocation of large models is mainly done through API calls, and it also supports calling local Ollama models.
-Currently, the multimodal functionality only supports image calls. The project structure is clear, the logic is straightforward, making it easy to customize and avoiding a mess!!!!
+Currently, the multimodal functionality only supports image calls. 
+The project structure is clear, the logic is straightforward, making it easy to customize and avoiding a mess!!!!
 
 ## Installation
 
