@@ -1,3 +1,3 @@
 @echo off
-call .\venv\Scripts\activate.bat
-python .\index.py
+call conda activate gradio
+python index.py

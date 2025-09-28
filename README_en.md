@@ -1,72 +1,89 @@
 # PrivateGPT
 
-This project is primarily developed based on Gradio, drawing inspiration from the [gpt_academic](https://github.com/binary-husky/gpt_academic) project, to create an extremely lightweight private Chat assistant. 
-The invocation of large models is mainly done through API calls, and it also supports calling local Ollama models.
-Currently, the multimodal functionality only supports image calls. 
-The project structure is clear, the logic is straightforward, making it easy to customize and avoiding a mess!!!!
+A lightweight, clean, and extensible private chat assistant that supports mainstream OpenAI-compatible APIs and local models. The project provides unified parameter settings, batch processing, and multi-model parallel comparison capabilities.
 
-## Installation
+## Usage
 
-It is recommended to use a venv virtual environment, and you can directly run [run.bat](.\run.bat) later.
+### MultiFunctionGPT 
+
+- Select an `AI Model`.
+- Choose a preset prompt in `Function` or enter a custom prompt in the right-side `Prompt` field (custom prompts have higher priority).
+- Expand `Parameters` to set `top_p` and `temperature` (default values can be used).
+
+**Use Cases**: Quick Q&A, standardized output based on function templates. Output is displayed in a streaming fashion.
+
+![Snipaste_2025-09-28_22-45-01](assets/Snipaste_2025-09-28_22-45-01.png)
+
+### BatchAgent 
+
+- Function selection:
+  - `List Task`: One task per line, suitable for to-do lists and item-based processing
+  - `Long Task`: Paste long text, the system will intelligently split it into segments for parallel processing
+- Enter a custom `Prompt` to guide output style and structure for batch tasks
+- Select an `AI Model` and set `Parameters`
+
+**Use Cases**: Thesis paragraph rewriting, batch processing of task lists, long text splitting and concurrent generation.
+
+![Snipaste_2025-09-28_22-45-05](assets/Snipaste_2025-09-28_22-45-05.png)
+
+### ModelComparison 
+
+- Enter a `Question` and `Prompt` at the top
+- Select three models (`Model1/2/3`), each can have independent `top_p` and `temperature` settings
+- Click `Submit All` for three-way parallel generation, or use individual `Submit` buttons for model comparisons
+
+**Use Cases**: Compare generation quality, style, and speed across different models to help select the optimal model and parameters for current tasks.
+
+![Snipaste_2025-09-28_22-45-10](assets/Snipaste_2025-09-28_22-45-10.png)
+
+## Installation & Running
+
+- Install dependencies:
 
 ```shell
 pip install -r requirements.txt
 ```
 
-## Usage
+- Launch application:
 
-Configure your API in [model_config.py](.\model_config.py). You can leave unused fields blank.
+```shell
+python index.py
+```
 
-```Python
+Or run the Windows batch script:
+
+```shell
+run.bat
+```
+
+## Configuration Guide
+
+- Configure vendor and model mappings in `config/model_config.py`: `supplier_dict` (API keys and Base URLs) and `model_dict` (model vendor, max tokens, max concurrency)
+
+```python
 supplier_dict = {
-    "zhipuai": {"api": "",
-                "url": "https://open.bigmodel.cn/api/paas/v4", },
-    "aliai": {"api": "",
-              "url": "https://dashscope.aliyuncs.com/compatible-mode/v1", },
-    "lingyiai": {"api": "",
-                 "url": "https://api.lingyiwanwu.com/v1", },
-    "kimiai": {"api": "",
-               "url": "https://api.moonshot.cn/v1", },
-    "ollama": {"host": "http://localhost:11434",
-               "headers": {'x-some-header': 'some-value'}, },
+    "zhipuai": {"api": "<YOUR_API_KEY>", "url": "https://open.bigmodel.cn/api/paas/v4"},
+    "aliai": {"api": "<YOUR_API_KEY>", "url": "https://dashscope.aliyuncs.com/compatible-mode/v1"},
+    "kimiai": {"api": "<YOUR_API_KEY>", "url": "https://api.moonshot.cn/v1"},
+    "deepseek": {"api": "<YOUR_API_KEY>", "url": "https://api.deepseek.com/v1"},
 }
-```
 
-Additionally, you can add configurations for models you wish to use below.
-
-```Python
 model_dict = {
-    "glm-4-plus": {"supplier": "zhipuai", "type": "llm"},
-    "glm-4-long": {"supplier": "zhipuai", "type": "llm"},
-    ...
+    "glm-4.5": {"supplier": "zhipuai", "max_tokens": 8192, "max_concurrent": 10},
+    "kimi-k2-0711-preview": {"supplier": "kimiai", "max_tokens": 8192, "max_concurrent": 10},
+    "deepseek-chat": {"supplier": "deepseek", "max_tokens": 4096, "max_concurrent": 10},
 }
 ```
 
-Now you can run [index.py](.\index.py) to enter the main interface.
+- Maintain function prompt templates in `config/function_config.py`: `function_dict` maps function names to system prompt texts (mixed Chinese/English as needed)
 
-![demo](.\docs\demo.png)
-
-You can now enjoy using it!
-
-## Additional Notes
-
-- You can choose the corresponding functions to meet your needs. If you think my functions are not good enough, you can add your own functions in [function_prompt.py](.\function_prompt.py) (essentially prompts). I'm sure you'll figure it out easily.
-- You can also change the top_p and temperature in the hidden tabs of other parameters.
-- At any time, if you define a prompt in the bottom right corner (which has the highest priority), it will override any function you choose.
-
-## Advanced Settings
-
-You can add functions to call large models from other platforms in [model_chat.py](.\model_chat.py). After adding them, you need to register your added functions in [model_switch.py](.\model_switch.py).
-
-```Python
-build_functions_dict = {
-    "zhipuai": build_openai,
-    "aliai": build_openai,
-    "lingyiai": build_openai,
-    "kimiai": build_openai,
-    "ollama": build_ollama,
-    ...
+```python
+function_dict: dict[str, str] = {
+    "NONE":
+        "",
+    "<function_name>":
+        """<prompt>""",
+    "<function_name>":
+        """<prompt>""",
 }
 ```
-
-I'm sure you'll figure it out easily.
